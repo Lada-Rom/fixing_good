@@ -1,7 +1,7 @@
 # MUST HAVE 3.19 or higher version
 # check https://cmake.org/cmake/help/latest/module/FindSDL.html#imported-targets
 cmake_minimum_required(VERSION 3.19)
-project(breaking_valley)
+project(fixing_good)
 
 # Create an option to switch between a system sdl library and a vendored sdl library
 option(MYGAME_VENDORED "Use vendored libraries" OFF)
