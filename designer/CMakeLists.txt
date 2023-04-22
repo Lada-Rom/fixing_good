@@ -1,13 +1,13 @@
 project(designer LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(HEADERS
     )
 
 set(SOURCES
-    main.cpp)
+    designer.cpp)
 
 if(MYGAME_VENDORED)
     add_subdirectory(${SUB_DIR_PATH} EXCLUDE_FROM_ALL)

@@ -1,13 +1,13 @@
 project(game LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(HEADERS
     )
 
 set(SOURCES
-    main.cpp)
+    game.cpp)
 
 if(MYGAME_VENDORED)
     add_subdirectory(${SUB_DIR_PATH} EXCLUDE_FROM_ALL)
@@ -29,3 +29,10 @@ add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 # custom command add imported libs to project-target
 PrjAddLibs(${PROJECT_NAME})
+
+###corelib
+target_link_libraries(${PROJECT_NAME} PUBLIC corelib)
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/core")
+
+###SDL2pp
+target_link_libraries(${PROJECT_NAME} PUBLIC SDL2pp::SDL2pp)
