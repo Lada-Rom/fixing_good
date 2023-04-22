@@ -29,3 +29,5 @@ add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 
 # custom command add imported libs to project-target
 PrjAddLibs(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} PUBLIC corelib)
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/core")
