@@ -3,9 +3,97 @@
 
 #include <SDL2pp/SDL2pp.hh>
 
-//#include <SDL.h>
-
 namespace pp = SDL2pp;
+
+
+struct Player {
+  void SetRunningRight() {
+    direction[RIGHT] = true;
+  }
+
+  void SetRunningLeft() {
+    direction[LEFT] = true;
+  }
+
+  void SetRunningUp() {
+    direction[UP] = true;
+  }
+
+  void SetRunningDown() {
+    direction[DOWN] = true;
+  }
+
+  bool IsRunningRight() {
+    return direction[RIGHT];
+  }
+
+  bool IsRunningLeft() {
+    return direction[LEFT];
+  }
+
+  bool IsRunningUp() {
+    return direction[UP];
+  }
+
+  bool IsRunningDown() {
+    return direction[DOWN];
+  }
+
+  void StopRunningRight() {
+    direction[RIGHT] = false;
+  }
+
+  void StopRunningLeft() {
+    direction[LEFT] = false;
+  }
+
+  void StopRunningUp() {
+    direction[UP] = false;
+  }
+
+  void StopRunningDown() {
+    direction[DOWN] = false;
+  }
+
+  void MoveRight(
+    const uint32_t& frame_delta,
+    const float& max_width) {
+    x += frame_delta * 0.2;
+    if (x > max_width)
+      x = -50;
+  }
+
+  void MoveLeft(
+    const uint32_t& frame_delta,
+    const float& max_width) {
+    x -= frame_delta * 0.2;
+    if (x < -50)
+      x = max_width;
+  }
+
+  void MoveUp(
+    const uint32_t& frame_delta,
+    const float& max_height) {
+    y -= frame_delta * 0.2;
+    if (y < -50)
+      y = max_height;
+  }
+
+  void MoveDown(
+    const uint32_t& frame_delta,
+    const float& max_height) {
+    y += frame_delta * 0.2;
+    if (y > max_height)
+      y = -50;
+  }
+
+  float x{};
+  float y{};
+
+  enum Running { RIGHT, LEFT, UP, DOWN};
+  std::vector<bool> direction{ false, false, false, false };
+};
+
 
 int main(int argc, char* args[]) {
 try {
@@ -18,16 +106,14 @@ try {
 
   pp::Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
   pp::Texture sprites(renderer, "../../data/player.png");
+  Player player{
+    0.5 * renderer.GetOutputWidth(),
+    0.5 * renderer.GetOutputHeight() };
 
-  bool is_running = false;        // whether the character is currently running
-  bool is_running_right = false;  // whether the character is currently running right
-  int run_phase = -1;             // run animation phase
-  float position = 0.0;           // player position
-
-  unsigned int prev_ticks = SDL_GetTicks();
+  uint32_t prev_ticks = SDL_GetTicks();
   while (true) {
-    unsigned int frame_ticks = SDL_GetTicks();
-    unsigned int frame_delta = frame_ticks - prev_ticks;
+    uint32_t frame_ticks = SDL_GetTicks();
+    uint32_t frame_delta = frame_ticks - prev_ticks;
     prev_ticks = frame_ticks;
 
     SDL_Event event;
@@ -42,57 +128,51 @@ try {
           return 0;
 
         case SDLK_RIGHT:
-          is_running = true;
-          is_running_right = true;
+          player.SetRunningRight();
           break;
         case SDLK_LEFT:
-          is_running = true;
-          is_running_right = false;
+          player.SetRunningLeft();
+          break;
+        case SDLK_UP:
+          player.SetRunningUp();
+          break;
+        case SDLK_DOWN:
+          player.SetRunningDown();
           break;
         }
       }
       else if (event.type == SDL_KEYUP) {
         switch (event.key.keysym.sym) {
         case SDLK_RIGHT:
-          is_running = false;
-          is_running_right = false;
+          player.StopRunningRight();
           break;
         case SDLK_LEFT:
-          is_running = false;
-          is_running_right = false;
+          player.StopRunningLeft();
+          break;
+        case SDLK_UP:
+          player.StopRunningUp();
+          break;
+        case SDLK_DOWN:
+          player.StopRunningDown();
           break;
         }
       }
     }
 
-    if (is_running) {
-      if (is_running_right) {
-        position += frame_delta * 0.2;
-        run_phase = (frame_ticks / 100) % 8;
-      }
-      if (!is_running_right) {
-        position -= frame_delta * 0.2;
-        run_phase = (frame_ticks / 100) % 8;
-      }
-    }
-    else {
-      run_phase = 0;
-    }
+    if (player.IsRunningRight())
+      player.MoveRight(frame_delta, renderer.GetOutputWidth());
+    if (player.IsRunningLeft())
+      player.MoveLeft(frame_delta, renderer.GetOutputWidth());
+    if (player.IsRunningUp())
+      player.MoveUp(frame_delta, renderer.GetOutputHeight());
+    if (player.IsRunningDown())
+      player.MoveDown(frame_delta, renderer.GetOutputHeight());
 
-    if (position > renderer.GetOutputWidth()) {
-      position = -50;
-    }
-    if (position < -50) {
-      position = renderer.GetOutputWidth();
-    }
-    std::cout << position << std::endl;
-
-    int vcenter = renderer.GetOutputHeight() / 2;
     renderer.Clear();
     renderer.Copy(
       sprites,
       pp::Rect(0, 0, 28, 45),
-      pp::Rect((int)position, vcenter - 50, 50, 50)
+      pp::Rect(player.x - 14, player.y - 22, 50, 50)
     );
     renderer.Present();
 
