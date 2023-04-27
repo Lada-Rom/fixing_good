@@ -3,7 +3,7 @@
 
 #include <SDL2pp/SDL2pp.hh>
 
-#include <SDL.h>
+//#include <SDL.h>
 
 namespace pp = SDL2pp;
 

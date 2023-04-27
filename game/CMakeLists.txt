@@ -31,8 +31,8 @@ add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
 PrjAddLibs(${PROJECT_NAME})
 
 ###corelib
-target_link_libraries(${PROJECT_NAME} PUBLIC corelib)
-target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/core")
+#target_link_libraries(${PROJECT_NAME} PRIVATE corelib)
+#target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/core")
 
 ###SDL2pp
-target_link_libraries(${PROJECT_NAME} PUBLIC SDL2pp::SDL2pp)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2pp::SDL2pp)
