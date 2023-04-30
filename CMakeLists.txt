@@ -1,19 +1,18 @@
-# MUST HAVE 3.19 or higher version
-# check https://cmake.org/cmake/help/latest/module/FindSDL.html#imported-targets
 cmake_minimum_required(VERSION 3.19)
+
 set(CMAKE_CXX_STANDARD 17)
-project(fixing_good)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Create an option to switch between a system sdl library and a vendored sdl library
-option(MYGAME_VENDORED "Use vendored libraries" OFF)
+project(fixing_good LANGUAGES CXX)
 
-# import path to sdl libs
-include(sdl_libs_paths.cmake)
-# import function PrjAddLibs
-include(utils.cmake)
-
-
-add_subdirectory(designer)
-add_subdirectory(game)
-add_subdirectory(core)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install)
+# main dependencies: SDL2, SDL2-image, SDL2-mixer, SDL2-ttf, SDL2-net, SDL2pp
 add_subdirectory(thirdparty)
+# own functionality for the game & the designer that isn't presented in 3rdparties libs
+add_subdirectory(core)
+# custom designer for setting collision areas for objects
+add_subdirectory(designer)
+# game
+add_subdirectory(game)
+
+
