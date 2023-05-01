@@ -54,6 +54,11 @@ FetchContent_Declare(
 )
 set(SDL2MIXER_VENDORED ON)
 set(SDL2MIXER_INSTALL OFF)
+#linker error on Windows + MinGW. Cannot link FLAC because of "undefined reference __stack_chk_fail()"
+if(WIN32 AND MINGW)
+	add_compile_options(-fno-stack-protector)
+    set(WITH_STACK_PROTECTOR OFF CACHE BOOL "" FORCE)
+endif()
 set(BUILD_SHARED_LIBS TRUE)
 #FetchContent_MakeAvailable(SDL2_mixer)
 find_package(SDL2_mixer)
