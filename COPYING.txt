@@ -1,6 +1,6 @@
 
 Fixing Good is the best game of all time!
-Copyright (C) 2023 Lada-Rom <doodleztoon@gmail.com>
+Copyright (C) 2023 Lada-Rom and ArtemKleymenov
   
 This software is provided 'as-is', without any express or implied
 warranty.  In no event will the authors be held liable for any damages

@@ -54,8 +54,6 @@ FetchContent_Declare(
 )
 set(SDL2MIXER_VENDORED ON)
 set(SDL2MIXER_INSTALL OFF)
-set(SDL2MIXER_FLAC OFF)
-set(SDL2MIXER_OPUS OFF)
 set(BUILD_SHARED_LIBS TRUE)
 #FetchContent_MakeAvailable(SDL2_mixer)
 find_package(SDL2_mixer)

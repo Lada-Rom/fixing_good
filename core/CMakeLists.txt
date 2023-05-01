@@ -1,6 +1,7 @@
 project(corelib LANGUAGES CXX)
 add_library(${PROJECT_NAME})
 add_subdirectory(wrappers)
+add_subdirectory(framework_ish)
 
 target_link_libraries(${PROJECT_NAME}
   PRIVATE

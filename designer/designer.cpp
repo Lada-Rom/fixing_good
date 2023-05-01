@@ -2,6 +2,9 @@
 #include <iostream>
 
 #include <SDL.h>
+#ifdef _WIN32
+  #include <SDL_main.h>
+#endif
 
 #include "wrappers/surface.hpp"
 #include "wrappers/window.hpp"
