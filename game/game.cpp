@@ -2,6 +2,9 @@
 #include <iostream>
 
 #include <SDL2pp/SDL2pp.hh>
+#ifdef _WIN32
+  #include <SDL_main.h>
+#endif
 
 namespace pp = SDL2pp;
 

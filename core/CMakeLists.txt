@@ -1,7 +1,16 @@
 project(corelib LANGUAGES CXX)
 add_library(${PROJECT_NAME})
 add_subdirectory(wrappers)
+add_subdirectory(framework_ish)
 
-find_package(SDL2 REQUIRED CONFIG REQUIRED COMPONENTS SDL2)
-find_package(SDL2_image REQUIRED CONFIG REQUIRED COMPONENTS SDL2_image)
-PrjAddLibs(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME}
+  PRIVATE
+  SDL2::SDL2
+  SDL2_image::SDL2_image
+  #SDL2_ttf::SDL2_ttf
+  #SDL2_mixer::SDL2_mixer
+  #SDL2_net::SDL2_net
+)
+if(WIN32 AND MINGW)
+    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
+endif()
