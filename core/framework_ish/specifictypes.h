@@ -25,7 +25,7 @@ using sint32  = int32_t;
 using uint32 = uint32_t;
 
 using real64 = double;
-using int64  = int64_t;
+using sint64  = int64_t;
 using uint64 = uint64_t;
 /// ----------------------- ///
 
@@ -34,7 +34,7 @@ using uint64 = uint64_t;
 using idx_8  = sint8;
 using idx_16 = sint16;
 using idx_32 = sint32;
-using idx_64 = int64;
+using idx_64 = sint64;
 
 using uidx_8  = uint8;
 using uidx_16 = uint16;
