@@ -12,16 +12,16 @@ namespace user_utils {
 
 /// COMMON ARITHMETIC TYPES ///
 using real8 = float;
-using int8  = int8_t;
+using sint8  = int8_t;
 using uint8 = uint8_t;
 
 //TODO: https://en.cppreference.com/w/cpp/types/floating-point
 using real16 = float;
-using int16  = int16_t;
+using sint16  = int16_t;
 using uint16 = uint16_t;
 
 using real32 = float;
-using int32  = int32_t;
+using sint32  = int32_t;
 using uint32 = uint32_t;
 
 using real64 = double;
@@ -31,9 +31,9 @@ using uint64 = uint64_t;
 
 
 /// TYPES FOR LOOPS ///
-using idx_8  = int8;
-using idx_16 = int16;
-using idx_32 = int32;
+using idx_8  = sint8;
+using idx_16 = sint16;
+using idx_32 = sint32;
 using idx_64 = int64;
 
 using uidx_8  = uint8;

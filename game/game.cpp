@@ -11,7 +11,7 @@
 namespace pp = SDL2pp;
 
 
-uu::int8 PollEvent(SDL_Event& event, Player& player) {
+uu::sint8 PollEvent(SDL_Event& event, Player& player) {
   while (SDL_PollEvent(&event)) {
     if (event.type == SDL_QUIT) {
       return 0;
@@ -75,8 +75,8 @@ try {
 
   uint32_t prev_ticks = SDL_GetTicks();
   while (true) {
-    uint32_t frame_ticks = SDL_GetTicks();
-    uint32_t frame_delta = frame_ticks - prev_ticks;
+    uu::uint32 frame_ticks = SDL_GetTicks();
+    uu::uint32 frame_delta = frame_ticks - prev_ticks;
     prev_ticks = frame_ticks;
 
     if (!PollEvent(event, player))
@@ -92,6 +92,14 @@ try {
       player.MoveDown(frame_delta, renderer.GetOutputHeight());
 
     renderer.Clear();
+    renderer.Copy(
+      background_sprite,
+      pp::Rect(0, 0, 128, 128),
+      pp::Rect(
+        0.5 * renderer.GetOutputWidth() - 64,
+        0.5 * renderer.GetOutputHeight() - 64,
+        128, 128)
+    );
     renderer.Copy(
       player_sprite,
       pp::Rect(0, 0, 28, 45),
