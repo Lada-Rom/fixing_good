@@ -53,6 +53,7 @@ uu::sint8 PollEvent(SDL_Event& event, Player& player) {
       }
     }
   }
+  return 1;
 }
 
 int main(int argc, char* args[]) {
@@ -68,10 +69,13 @@ try {
   pp::Texture player_sprite(renderer, "../../data/player.png");
   pp::Texture background_sprite(renderer, "../../data/background_grass.png");
 
+  pp::Point ps_size{ player_sprite.GetSize() };
+  pp::Point bs_size{ background_sprite.GetSize() };
+
   SDL_Event event;
   Player player{
-    0.5 * renderer.GetOutputWidth(),
-    0.5 * renderer.GetOutputHeight() };
+    0.5f * renderer.GetOutputWidth(),
+    0.5f * renderer.GetOutputHeight() };
 
   uint32_t prev_ticks = SDL_GetTicks();
   while (true) {
@@ -91,19 +95,26 @@ try {
     if (player.IsRunningDown())
       player.MoveDown(frame_delta, renderer.GetOutputHeight());
 
+    uu::real32 scale{2};
     renderer.Clear();
     renderer.Copy(
       background_sprite,
-      pp::Rect(0, 0, 128, 128),
+      pp::Rect(0, 0, bs_size.x, bs_size.y),
       pp::Rect(
-        0.5 * renderer.GetOutputWidth() - 64,
-        0.5 * renderer.GetOutputHeight() - 64,
-        128, 128)
+        0.5 * renderer.GetOutputWidth() - scale * bs_size.x,
+        0.5 * renderer.GetOutputHeight() - scale * bs_size.y,
+        2 * scale * bs_size.x,
+        2 * scale * bs_size.y
+      )
     );
     renderer.Copy(
       player_sprite,
-      pp::Rect(0, 0, 28, 45),
-      pp::Rect(player.x - 14, player.y - 22, 56, 90)
+      pp::Rect(0, 0, ps_size.x, ps_size.y),
+      pp::Rect(
+        player.x - ps_size.x,
+        player.y - ps_size.y,
+        scale * ps_size.x, scale * ps_size.y
+      )
     );
     renderer.Present();
 
@@ -119,4 +130,5 @@ catch (pp::Exception& e) {
 catch (std::exception& e) {
   std::cerr << e.what() << std::endl;
 }
+  return 0;
 }

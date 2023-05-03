@@ -11,11 +11,12 @@ class Player {
 public:
   enum Running { RIGHT, LEFT, UP, DOWN };
 
-  Player::Player() = default;
-  Player::Player(
-    const uu::real64& x,
-    const uu::real64& y)
+  Player() = default;
+  Player(
+    const uu::real32& x,
+    const uu::real32& y)
     : x(x), y(y) {}
+  ~Player() = default;
 
   void SetRunningRight();
   void SetRunningLeft();
