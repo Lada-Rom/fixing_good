@@ -5,13 +5,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(HEADERS
     player.hpp
-    texture_manager.h
+    resource_manager.hpp
     )
 
 set(SOURCES
     game.cpp
     player.cpp
-    texture_manager.cpp
     )
 
 # Create game executable target as usual

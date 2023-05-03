@@ -1,11 +1,13 @@
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include <SDL2pp/SDL2pp.hh>
 #ifdef _WIN32
   #include <SDL_main.h>
 #endif
 
+#include "resource_manager.hpp"
 #include "player.hpp"
 
 namespace pp = SDL2pp;
@@ -53,6 +55,7 @@ uu::sint8 PollEvent(SDL_Event& event, Player& player) {
       }
     }
   }
+  return 1;
 }
 
 int main(int argc, char* args[]) {
@@ -64,14 +67,16 @@ try {
     1024, 916,
     SDL_WINDOW_RESIZABLE);
 
-  pp::Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
-  pp::Texture player_sprite(renderer, "../../data/player.png");
-  pp::Texture background_sprite(renderer, "../../data/background_grass.png");
+  std::shared_ptr<pp::Renderer> renderer
+    = std::make_shared<pp::Renderer>(window, -1, SDL_RENDERER_ACCELERATED);
+  ResourceManager<pp::Texture> texture_manager(renderer);
+  texture_manager.Create("player", "../../data/player.png");
+  texture_manager.Create("background", "../../data/background_grass.png");
 
   SDL_Event event;
   Player player{
-    0.5 * renderer.GetOutputWidth(),
-    0.5 * renderer.GetOutputHeight() };
+    0.5 * renderer->GetOutputWidth(),
+    0.5 * renderer->GetOutputHeight() };
 
   uint32_t prev_ticks = SDL_GetTicks();
   while (true) {
@@ -83,29 +88,29 @@ try {
       return 0;
 
     if (player.IsRunningRight())
-      player.MoveRight(frame_delta, renderer.GetOutputWidth());
+      player.MoveRight(frame_delta, renderer->GetOutputWidth());
     if (player.IsRunningLeft())
-      player.MoveLeft(frame_delta, renderer.GetOutputWidth());
+      player.MoveLeft(frame_delta, renderer->GetOutputWidth());
     if (player.IsRunningUp())
-      player.MoveUp(frame_delta, renderer.GetOutputHeight());
+      player.MoveUp(frame_delta, renderer->GetOutputHeight());
     if (player.IsRunningDown())
-      player.MoveDown(frame_delta, renderer.GetOutputHeight());
+      player.MoveDown(frame_delta, renderer->GetOutputHeight());
 
-    renderer.Clear();
-    renderer.Copy(
-      background_sprite,
+    renderer->Clear();
+    renderer->Copy(
+      texture_manager.Get("background"),
       pp::Rect(0, 0, 128, 128),
       pp::Rect(
-        0.5 * renderer.GetOutputWidth() - 64,
-        0.5 * renderer.GetOutputHeight() - 64,
+        0.5 * renderer->GetOutputWidth() - 64,
+        0.5 * renderer->GetOutputHeight() - 64,
         128, 128)
     );
-    renderer.Copy(
-      player_sprite,
+    renderer->Copy(
+      texture_manager.Get("player"),
       pp::Rect(0, 0, 28, 45),
       pp::Rect(player.x - 14, player.y - 22, 56, 90)
     );
-    renderer.Present();
+    renderer->Present();
 
     SDL_Delay(1);
   }
