@@ -384,7 +384,7 @@ Vector2D<NumT>::operator Vector2D<To>() const {
 /// --------------------- ///
 
 /// TYPES ALIASES ///
-using Vector2i = Vector2D<int32>;
+using Vector2i = Vector2D<sint32>;
 using Vector2u = Vector2D<uint32>;
 using Vector2f = Vector2D<real32>;
 /// ------------- ///

@@ -4,10 +4,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(HEADERS
+	player.hpp
     )
 
 set(SOURCES
     game.cpp
+	player.cpp
 	)
 
 # Create game executable target as usual
@@ -26,8 +28,8 @@ if(WIN32)
 endif()
 
 ###corelib
-#target_link_libraries(${PROJECT_NAME} PRIVATE corelib)
-#target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/core")
+target_link_libraries(${PROJECT_NAME} PRIVATE corelib)
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/core")
 
 ###SDL2pp
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL2pp::SDL2pp)
