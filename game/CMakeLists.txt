@@ -4,13 +4,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(HEADERS
-	player.hpp
+    player.hpp
+    texture_manager.h
     )
 
 set(SOURCES
     game.cpp
-	player.cpp
-	)
+    player.cpp
+    texture_manager.cpp
+    )
 
 # Create game executable target as usual
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
