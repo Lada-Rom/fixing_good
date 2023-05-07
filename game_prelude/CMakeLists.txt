@@ -1,16 +1,14 @@
-project(game LANGUAGES CXX)
+project(game_prelude LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(HEADERS
-    player.hpp
-    resource_manager.h
+    texture_manager.h
     )
 
 set(SOURCES
-    game.cpp
-    player.cpp
+    texture_manager.cpp
     )
 
 # Create game executable target as usual
@@ -20,9 +18,9 @@ target_link_libraries(${PROJECT_NAME}
   PRIVATE
   SDL2::SDL2
   SDL2_image::SDL2_image
-  SDL2_ttf::SDL2_ttf
-  SDL2_mixer::SDL2_mixer
-  SDL2_net::SDL2_net
+  #SDL2_ttf::SDL2_ttf
+  #SDL2_mixer::SDL2_mixer
+  #SDL2_net::SDL2_net
 )
 if(WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)

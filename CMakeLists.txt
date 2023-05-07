@@ -19,4 +19,7 @@ add_subdirectory(designer)
 # game
 add_subdirectory(game)
 
+# game-ish
+add_subdirectory(game_prelude)
+
 
