@@ -11,8 +11,8 @@ class Player {
 public:
   enum Running { RIGHT, LEFT, UP, DOWN };
 
-  Player::Player() = default;
-  Player::Player(
+  Player() = default;
+  Player(
     const uu::real64& x,
     const uu::real64& y)
     : x(x), y(y) {}

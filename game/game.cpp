@@ -12,6 +12,9 @@
 
 namespace pp = SDL2pp;
 
+uu::sint32 scrolling_offset_x = 0;
+uu::sint32 scrolling_offset_y = 0;
+uu::sint32 scrolling_offset_step = 3;
 
 uu::sint8 PollEvent(SDL_Event& event, Player& player) {
   while (SDL_PollEvent(&event)) {
@@ -26,15 +29,19 @@ uu::sint8 PollEvent(SDL_Event& event, Player& player) {
 
       case SDLK_RIGHT:
         player.SetRunningRight();
+        scrolling_offset_x -= scrolling_offset_step;
         break;
       case SDLK_LEFT:
         player.SetRunningLeft();
+        scrolling_offset_x += scrolling_offset_step;
         break;
       case SDLK_UP:
         player.SetRunningUp();
+        scrolling_offset_y += scrolling_offset_step;
         break;
       case SDLK_DOWN:
         player.SetRunningDown();
+        scrolling_offset_y -= scrolling_offset_step;
         break;
       }
     }
@@ -58,17 +65,51 @@ uu::sint8 PollEvent(SDL_Event& event, Player& player) {
   return 1;
 }
 
+std::shared_ptr<pp::Renderer> renderer = nullptr;
+
+void infinityBack(ResourceManager<pp::Texture>& _rm) {
+    const uu::sint32 img_width (128);
+    const uu::sint32 img_height(128);
+
+    const uu::sint32 last_w(renderer->GetOutputWidth() + img_width);
+    const uu::sint32 last_h(renderer->GetOutputHeight() + img_height);
+
+    for(uu::sint32 col(-img_width); col < last_w; col += img_width) {
+        for(uu::sint32 row(-img_height); row < last_h; row += img_width) {
+            if(std::abs(scrolling_offset_x) > img_width)
+                scrolling_offset_x = 0;
+            if(std::abs(scrolling_offset_y) > img_height)
+                scrolling_offset_y = 0;
+            renderer->Copy(
+              _rm.Get("background"),
+              pp::Rect(0, 0, img_width, img_height),
+              pp::Rect(row + scrolling_offset_x,
+                       col + scrolling_offset_y,
+                       img_width,
+                       img_height)
+            );
+        }
+    }
+}
+
+const uu::uint16 WINDOW_WIDTH  = 480;
+const uu::uint16 WINDOW_HEIGHT = 425;
+
+const uu::uint16 SCREEN_ACTIVE_ZONE_WIDTH  = 960;
+const uu::uint16 SCREEN_ACTIVE_ZONE_HEIGHT = 850;
+
 int main(int argc, char* args[]) {
+    (void)argc;
+    (void)args;
 try {
   pp::SDL sdl(SDL_INIT_VIDEO);
 
   pp::Window window("SDL2pp demo",
     SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-    1024, 916,
+    WINDOW_WIDTH, WINDOW_HEIGHT,
     SDL_WINDOW_RESIZABLE);
 
-  std::shared_ptr<pp::Renderer> renderer
-    = std::make_shared<pp::Renderer>(window, -1, SDL_RENDERER_ACCELERATED);
+  renderer = std::make_shared<pp::Renderer>(window, -1, SDL_RENDERER_ACCELERATED);
   ResourceManager<pp::Texture> texture_manager(renderer);
   texture_manager.Create("player", "../../data/player.png");
   texture_manager.Create("background", "../../data/background_grass.png");
@@ -79,6 +120,9 @@ try {
     0.5 * renderer->GetOutputHeight() };
 
   uint32_t prev_ticks = SDL_GetTicks();
+
+  pp::Rect camera = pp::Rect(0, 0, SCREEN_ACTIVE_ZONE_WIDTH, SCREEN_ACTIVE_ZONE_HEIGHT);
+
   while (true) {
     uu::uint32 frame_ticks = SDL_GetTicks();
     uu::uint32 frame_delta = frame_ticks - prev_ticks;
@@ -96,19 +140,24 @@ try {
     if (player.IsRunningDown())
       player.MoveDown(frame_delta, renderer->GetOutputHeight());
 
+    //Center the camera over the dot
+    camera.x = (player.x + 7.0)  - WINDOW_WIDTH  / 2;
+    camera.y = (player.y + 11.0) - WINDOW_HEIGHT / 2;
+
+    //Keep the camera in bounds
+    if(camera.x < 0) camera.x = 0;
+    if(camera.y < 0) camera.y = 0;
+    if(camera.x > SCREEN_ACTIVE_ZONE_WIDTH - camera.w)
+        camera.x = SCREEN_ACTIVE_ZONE_WIDTH - camera.w;
+    if(camera.y > SCREEN_ACTIVE_ZONE_HEIGHT - camera.h)
+        camera.y = SCREEN_ACTIVE_ZONE_HEIGHT - camera.h;
+
     renderer->Clear();
-    renderer->Copy(
-      texture_manager.Get("background"),
-      pp::Rect(0, 0, 128, 128),
-      pp::Rect(
-        0.5 * renderer->GetOutputWidth() - 64,
-        0.5 * renderer->GetOutputHeight() - 64,
-        128, 128)
-    );
+    infinityBack(texture_manager);
     renderer->Copy(
       texture_manager.Get("player"),
       pp::Rect(0, 0, 28, 45),
-      pp::Rect(player.x - 14, player.y - 22, 56, 90)
+      pp::Rect(camera.x -28.0 + WINDOW_WIDTH / 2, camera.y -45+  WINDOW_HEIGHT / 2, 56, 90)
     );
     renderer->Present();
 
@@ -124,4 +173,5 @@ catch (pp::Exception& e) {
 catch (std::exception& e) {
   std::cerr << e.what() << std::endl;
 }
+    return 0;
 }

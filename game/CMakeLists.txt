@@ -25,7 +25,7 @@ target_link_libraries(${PROJECT_NAME}
   SDL2_net::SDL2_net
 )
 if(WIN32)
-    target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
+  target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2main)
 endif()
 
 ###corelib
