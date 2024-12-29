@@ -38,7 +38,6 @@ SDL_AppResult SDL_AppEvent(SDL_Event *event, int *direction) {
 
     return SDL_APP_CONTINUE;  /* carry on with the program! */
 }
-//SDL_FRect rect = SDL_FRect();
 
 
 /* This function runs once per frame, and is the heart of the program. */
@@ -54,20 +53,9 @@ SDL_AppResult SDL_AppIterate(SDL_Renderer *renderer, Player& player, int directi
     /* clear the window to the draw color. */
     SDL_RenderClear(renderer);
 
-    // if ((direction & Direction::UP) != 0)
-    //     rect.y -= 3;
-    // if ((direction & Direction::LEFT) != 0)
-    //     rect.x -= 3;
-    // if ((direction & Direction::DOWN) != 0)
-    //     rect.y += 3;
-    // if ((direction & Direction::RIGHT) != 0)
-    //     rect.x += 3;
-
     player.Move(direction);
 
-
     SDL_SetRenderDrawColorFloat(renderer, 0.1, 0.1, 0.1, SDL_ALPHA_OPAQUE_FLOAT);  /* new color, full alpha. */
-    //bool ret = SDL_RenderFillRect(renderer, &rect);
     bool ret = player.Render(renderer);
 
     /* put the newly-cleared rendering on the screen. */
@@ -77,7 +65,6 @@ SDL_AppResult SDL_AppIterate(SDL_Renderer *renderer, Player& player, int directi
 }
 
 int main(int /*argc*/, char** /*argv*/) {
-    
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
     Player player = Player();
@@ -91,11 +78,6 @@ int main(int /*argc*/, char** /*argv*/) {
     bool running = true;
     SDL_Event *event = new SDL_Event();
 
-    // rect.x = 10.f;
-    // rect.y = 10.f;
-    // rect.w = 100.f;
-    // rect.h = 100.f;
-    
     while (running) {
         int direction = 0;
         while (SDL_PollEvent(event)) {
