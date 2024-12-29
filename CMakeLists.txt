@@ -26,6 +26,7 @@ add_executable(
 
     include/actor.hpp
     include/player.hpp
+    include/drawable.hpp
 )
 
 set(RESOURCES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/resources)

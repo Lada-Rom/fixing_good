@@ -53,10 +53,10 @@ SDL_AppResult SDL_AppIterate(SDL_Renderer *renderer, Player& player, int directi
     /* clear the window to the draw color. */
     SDL_RenderClear(renderer);
 
-    player.Move(direction);
+    // player.Move(direction);
 
     SDL_SetRenderDrawColorFloat(renderer, 0.1, 0.1, 0.1, SDL_ALPHA_OPAQUE_FLOAT);  /* new color, full alpha. */
-    bool ret = player.Render(renderer);
+    bool ret = player.Draw(renderer);
 
     /* put the newly-cleared rendering on the screen. */
     SDL_RenderPresent(renderer);

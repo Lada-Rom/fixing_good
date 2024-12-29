@@ -1,11 +1,15 @@
 #ifndef MAGIC_PLAYER_HPP
 #define MAGIC_PLAYER_HPP
 
-#include "actor.hpp"
 #include <SDL3/SDL.h>
 
+#include "actor.hpp"
+#include "drawable.hpp"
 
-class Player : public Actor {
+
+class Player 
+    : public Actor
+    , public Drawable {
 public:
     Player() {
         SDL_Log("Player is created");
@@ -15,18 +19,8 @@ public:
         SDL_Log("Player is deleted");
     }
 
-    void Move(int direction) {
-        if ((direction & Direction::UP) != 0)
-            rect.y -= move_delta;
-        if ((direction & Direction::LEFT) != 0)
-            rect.x -= move_delta;
-        if ((direction & Direction::DOWN) != 0)
-            rect.y += move_delta;
-        if ((direction & Direction::RIGHT) != 0)
-            rect.x += move_delta;
-    }
 
-    bool Render(SDL_Renderer *renderer) {
+    bool Draw(SDL_Renderer *renderer) {
         return SDL_RenderFillRect(renderer, &(this->rect));
     }
 
