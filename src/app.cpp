@@ -94,22 +94,22 @@ int main(int /*argc*/, char** /*argv*/) {
         const bool *state = SDL_GetKeyboardState(nullptr);
         if (state[SDL_SCANCODE_W]) {
             std::cout << "Dir W " << std::endl;
-            delta_move.setY(-player.MoveStep());
+            delta_move.setY(-1);
             //direction = direction | Direction::UP;
         }
         if (state[SDL_SCANCODE_A]) {
             std::cout << "Dir A " << std::endl;
-            delta_move.setX(-player.MoveStep());
+            delta_move.setX(-1);
             //direction = direction | Direction::LEFT;
         }
         if (state[SDL_SCANCODE_S]) {
             std::cout << "Dir S " << std::endl;
-            delta_move.setY(player.MoveStep());
+            delta_move.setY(1);
             //direction = direction | Direction::DOWN;
         }
         if (state[SDL_SCANCODE_D]) {
             std::cout << "Dir D " << std::endl;
-            delta_move.setX(player.MoveStep());
+            delta_move.setX(1);
             //direction = direction | Direction::RIGHT;
         }
 

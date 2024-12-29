@@ -14,7 +14,7 @@ typedef uint8_t  uint8;
 
 typedef float Radian;
 typedef float Degree;
-
+real32 precision_rate = 1e-6;
 
 template <class NumT>
 class Vector2D {
@@ -106,6 +106,7 @@ public: // arithmetic op-s
     constexpr bool operator!=(const Vector2D& rhs) const;
 
 public: // actions with angle
+    // suffix `ip` means In-Place
     //constexpr Vector2D rotate(const Degree& p_angle) const noexcept;
     constexpr Vector2D rotate(const Radian& p_angle) const noexcept;
     //constexpr Vector2D& rotate_ip(const Degree& p_angle) noexcept;
@@ -158,7 +159,7 @@ std::ostream& operator<<(std::ostream& out, const Vector2D<NumT>& val) {
     return out;
 }
 
-// template should be on ome translation unit
+// template should be on one translation unit
 // https://stackoverflow.com/a/4015073
 template <class NumT>
 constexpr
@@ -294,22 +295,23 @@ template <class NumT>
 constexpr
     Vector2D<NumT>& Vector2D<NumT>::normalize() const {
     auto ret(*this);
-    return ret.normalize_ip();
-}
-
-template <class NumT>
-constexpr
-    Vector2D<NumT> Vector2D<NumT>::rotate(const Degree& p_angle) const noexcept {
-    auto ret(*this);
-    return ret.rotate_ip(p_angle);
+    ret.normalize_ip();
+    return ret;
 }
 
 //template <class NumT>
 //constexpr
-//    Vector2D<NumT> Vector2D<NumT>::rotate(const Radian& p_angle) const noexcept {
+//    Vector2D<NumT> Vector2D<NumT>::rotate(const Degree& p_angle) const noexcept {
 //    auto ret(*this);
 //    return ret.rotate_ip(p_angle);
 //}
+
+template <class NumT>
+constexpr
+    Vector2D<NumT> Vector2D<NumT>::rotate(const Radian& p_angle) const noexcept {
+    auto ret(*this);
+    return ret.rotate_ip(p_angle);
+}
 
 //template <class NumT>
 //constexpr

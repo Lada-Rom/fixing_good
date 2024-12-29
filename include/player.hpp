@@ -23,16 +23,15 @@ public:
     }
 
     void Move(const Vector2f& delta_move) {
-        Move(delta_move.x(), delta_move.y());
+        Vector2f norm_delta_move{ delta_move.normalize() };
+        real32 norm_x{ norm_delta_move.x() * move_delta };
+        real32 norm_y{ norm_delta_move.y() * move_delta };
+        Move(norm_x, norm_y);
     }
 
-    void Move(float delta_x, float delta_y) override {
+    void Move(real32 delta_x, real32 delta_y) override {
         rect.x += delta_x;
         rect.y += delta_y;
-    }
-
-    real32 MoveStep() const {
-        return move_delta;
     }
 
     bool Draw(SDL_Renderer *renderer) {
