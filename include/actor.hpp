@@ -1,3 +1,6 @@
+#ifndef MAGIC_ACTOR_HPP
+#define MAGIC_ACTOR_HPP
+
 #include <SDL3/SDL.h>
 
 enum Direction {
@@ -20,3 +23,5 @@ public:
 
 
 };
+
+#endif  // !MAGIC_ACTOR_HPP

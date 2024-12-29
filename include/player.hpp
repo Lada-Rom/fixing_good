@@ -1,3 +1,6 @@
+#ifndef MAGIC_PLAYER_HPP
+#define MAGIC_PLAYER_HPP
+
 #include "actor.hpp"
 #include <SDL3/SDL.h>
 
@@ -32,3 +35,5 @@ private:
     SDL_FRect rect{ 10.f, 10.f, 100.f, 100.f };
 
 };
+
+#endif  // !MAGIC_PLAYER_HPP
