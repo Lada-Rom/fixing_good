@@ -1,6 +1,9 @@
 #include <iostream>
 #include <SDL3/SDL.h>
+
+#include "vector2d.hpp"
 #include "player.hpp"
+
 
 SDL_AppResult SDL_AppInit(SDL_Window **window, SDL_Renderer **renderer) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -16,8 +19,8 @@ SDL_AppResult SDL_AppInit(SDL_Window **window, SDL_Renderer **renderer) {
     return SDL_APP_CONTINUE;
 }
 
-/* This function runs when a new event (mouse input, keypresses, etc) occurs. */
-SDL_AppResult SDL_AppEvent(SDL_Event *event, int *direction) {
+
+SDL_AppResult SDL_AppEvent(SDL_Event *event) {
     if(event) {
         switch (event->type) {
         case SDL_EVENT_QUIT:
@@ -36,33 +39,34 @@ SDL_AppResult SDL_AppEvent(SDL_Event *event, int *direction) {
         }
     }
 
-    return SDL_APP_CONTINUE;  /* carry on with the program! */
+    return SDL_APP_CONTINUE;
 }
 
 
-/* This function runs once per frame, and is the heart of the program. */
-SDL_AppResult SDL_AppIterate(SDL_Renderer *renderer, Player& player, int direction) {
-    // std::cout << SDL_GetTicks() << std::endl;
-    const double now = ((double)SDL_GetTicks()) / 1000.0;  /* convert from milliseconds to seconds. */
-    /* choose the color for the frame we will draw. The sine wave trick makes it fade between colors smoothly. */
-    // const float red = (float) (0.5 + 0.5 * SDL_sin(now));
-    // const float green = (float) (0.5 + 0.5 * SDL_sin(now + SDL_PI_D * 2 / 3));
-    // const float blue = (float) (0.5 + 0.5 * SDL_sin(now + SDL_PI_D * 4 / 3));
+SDL_AppResult SDL_IteratePhysics(Player& player, const Vector2f& delta_move) {
+    player.Move(delta_move);
+    return SDL_APP_CONTINUE;
+}
 
-    SDL_SetRenderDrawColorFloat(renderer, 0.5, 0.1, 0.7, SDL_ALPHA_OPAQUE_FLOAT);  /* new color, full alpha. */
-    /* clear the window to the draw color. */
+SDL_AppResult SDL_IterateRenderer(SDL_Renderer* renderer, Player& player) {
+    SDL_SetRenderDrawColorFloat(renderer, 0.5, 0.1, 0.7, SDL_ALPHA_OPAQUE_FLOAT);
     SDL_RenderClear(renderer);
 
-    // player.Move(direction);
-
-    SDL_SetRenderDrawColorFloat(renderer, 0.1, 0.1, 0.1, SDL_ALPHA_OPAQUE_FLOAT);  /* new color, full alpha. */
+    SDL_SetRenderDrawColorFloat(renderer, 0.1, 0.1, 0.1, SDL_ALPHA_OPAQUE_FLOAT);
     bool ret = player.Draw(renderer);
 
-    /* put the newly-cleared rendering on the screen. */
     SDL_RenderPresent(renderer);
-
-    return SDL_APP_CONTINUE;  /* carry on with the program! */
+    return SDL_APP_CONTINUE;
 }
+
+
+SDL_AppResult SDL_AppIterate(SDL_Renderer *renderer, Player& player, const Vector2f& delta_move) {
+    const double now = ((double)SDL_GetTicks()) / 1000.0;  /* convert from milliseconds to seconds. */
+    SDL_IteratePhysics(player, delta_move);
+    SDL_IterateRenderer(renderer, player);
+    return SDL_APP_CONTINUE;
+}
+
 
 int main(int /*argc*/, char** /*argv*/) {
     SDL_Window *window = nullptr;
@@ -79,9 +83,9 @@ int main(int /*argc*/, char** /*argv*/) {
     SDL_Event *event = new SDL_Event();
 
     while (running) {
-        int direction = 0;
+        Vector2f delta_move{};
         while (SDL_PollEvent(event)) {
-            SDL_AppResult result = SDL_AppEvent(event, &direction);
+            SDL_AppResult result = SDL_AppEvent(event);
             if (result == SDL_APP_SUCCESS) {
                 running = false;
             }
@@ -89,24 +93,27 @@ int main(int /*argc*/, char** /*argv*/) {
 
         const bool *state = SDL_GetKeyboardState(nullptr);
         if (state[SDL_SCANCODE_W]) {
-            std::cout << "Dir W " << direction << std::endl;
-            direction = direction | Direction::UP;
+            std::cout << "Dir W " << std::endl;
+            delta_move.setY(-player.MoveStep());
+            //direction = direction | Direction::UP;
         }
         if (state[SDL_SCANCODE_A]) {
-            std::cout << "Dir A " << direction << std::endl;
-            direction = direction | Direction::LEFT;
+            std::cout << "Dir A " << std::endl;
+            delta_move.setX(-player.MoveStep());
+            //direction = direction | Direction::LEFT;
         }
         if (state[SDL_SCANCODE_S]) {
-            std::cout << "Dir S " << direction << std::endl;
-            direction = direction | Direction::DOWN;
+            std::cout << "Dir S " << std::endl;
+            delta_move.setY(player.MoveStep());
+            //direction = direction | Direction::DOWN;
         }
         if (state[SDL_SCANCODE_D]) {
-            std::cout << "Dir D " << direction << std::endl;
-            direction = direction | Direction::RIGHT;
+            std::cout << "Dir D " << std::endl;
+            delta_move.setX(player.MoveStep());
+            //direction = direction | Direction::RIGHT;
         }
-        
-        // std::cout << "Dir " << direction << std::endl;
-        SDL_AppResult result = SDL_AppIterate(renderer, player, direction);
+
+        SDL_AppResult result = SDL_AppIterate(renderer, player, delta_move);
     }
     delete event;
     //Destroy window
