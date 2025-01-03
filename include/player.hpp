@@ -3,6 +3,8 @@
 
 #include <SDL3/SDL.h>
 
+#include "types.hpp"
+
 #include "actor.hpp"
 #include "moveable.hpp"
 #include "drawable.hpp"
@@ -23,9 +25,11 @@ public:
     }
 
     void Move(const Vector2f& delta_move) {
-        Vector2f norm_delta_move{ delta_move.normalize() };
+        Vector2f norm_delta_move { delta_move.normalize() };
+
         real32 norm_x{ norm_delta_move.x() * move_delta };
         real32 norm_y{ norm_delta_move.y() * move_delta };
+        
         Move(norm_x, norm_y);
     }
 
@@ -34,7 +38,7 @@ public:
         rect.y += delta_y;
     }
 
-    bool Draw(SDL_Renderer *renderer) {
+    bool Draw(SDL_Renderer *renderer) override {
         return SDL_RenderFillRect(renderer, &(this->rect));
     }
 

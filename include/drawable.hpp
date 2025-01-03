@@ -1,7 +1,7 @@
 #ifndef MAGIC_DRAWABLE_HPP
 #define MAGIC_DRAWABLE_HPP
 
-#include <SDL3/SDL.h>
+struct SDL_Renderer;
 
 class Drawable {
 public:

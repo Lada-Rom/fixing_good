@@ -3,6 +3,7 @@
 
 #include "vector2d.hpp"
 #include "player.hpp"
+#include "types.hpp"
 
 
 SDL_AppResult SDL_AppInit(SDL_Window **window, SDL_Renderer **renderer) {
@@ -67,7 +68,7 @@ SDL_AppResult SDL_AppIterate(SDL_Renderer *renderer, Player& player, const Vecto
     return SDL_APP_CONTINUE;
 }
 
-
+#include "rect.hpp"
 int main(int /*argc*/, char** /*argv*/) {
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;

@@ -1,21 +1,28 @@
-#ifndef __VECTROR_2D__
-#define __VECTROR_2D__
+/**
+ * @file vector2d.hpp
+ * @author ArtemK
+ * @brief Contains Vector2D realization
+ * @version 1.0
+ * @date 2025-01-02
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
+#ifndef __VECTOR_2D__
+#define __VECTOR_2D__
 
 #include <math.h>
 #include <limits>
 #include <stdexcept>
 #include <iostream>
 
+#include "types.hpp"
 
-typedef    float real32;
-typedef  int32_t sint32;
-typedef uint32_t uint32;
-typedef uint8_t  uint8;
-
-typedef float Radian;
-typedef float Degree;
-real32 precision_rate = 1e-6;
-
+/**
+ * @brief Defines a class for 2-dim Vector object
+ * 
+ * @tparam NumT Type of Vector's fields
+ */
 template <class NumT>
 class Vector2D {
 public:
@@ -25,9 +32,8 @@ public:
         Vector2D(NumT x, NumT y) noexcept
         : m_x(std::move(x))
         , m_y(std::move(y)) {}
-
     constexpr
-        Vector2D(const Vector2D& vec) noexcept;
+        Vector2D(const Vector2D& vec) noexcept;        
     constexpr
         Vector2D& operator=(const Vector2D& vec) noexcept;
     // https://habr.com/ru/articles/164221/
@@ -36,6 +42,12 @@ public:
     constexpr
         Vector2D& operator=(Vector2D&& vec) noexcept; // w-out noexcept no move semantic by default
     ~Vector2D() = default;
+
+public: // conversions
+    // https://www.reddit.com/r/cpp_questions/comments/kd48uw/convert_one_vector_type_to_another/
+    template <class NumU>
+    constexpr
+        explicit Vector2D(const Vector2D<NumU>& vector);
 
 public: // access op-s
     // constexpr implements inline
@@ -52,7 +64,7 @@ public: // access op-s
         case 1:
             return m_y;
         default:
-            throw out_of_struct_range();
+            throw std::out_of_range(" ==> Error: Out of struct range.\n");
         }
     }
 
@@ -64,7 +76,7 @@ public: // access op-s
         case 1:
             return m_y;
         default:
-            throw out_of_struct_range();
+            throw std::out_of_range(" ==> Error: Out of struct range.\n");
         }
     }
 
@@ -72,14 +84,14 @@ public: // access op-s
         NumT& operator[](const std::string_view& p_pos) {
         if (p_pos == "x") return m_x;
         else if (p_pos == "y") return m_y;
-        else throw out_of_struct_range();
+        else throw std::out_of_range(" ==> Error: Out of struct range.\n");
     }
 
     constexpr
         const NumT& operator[](const std::string_view& p_pos) const {
         if (p_pos == "x") return m_x;
         else if (p_pos == "y") return m_y;
-        else throw out_of_struct_range();
+        else throw std::out_of_range(" ==> Error: Out of struct range.\n");
     }
 
     constexpr
@@ -119,9 +131,12 @@ public: // main API
     constexpr
         real32 magnitude() const noexcept;
     constexpr
-        Vector2D& normalize() const;
+        real32 magnitude_square() const noexcept;
+
     constexpr
-        void normalize_ip();
+        Vector2D normalize() const;
+    constexpr
+        Vector2D<NumT>& normalize_ip();
 
     constexpr
         real32 dot(const Vector2D& rhs) const noexcept;
@@ -134,19 +149,6 @@ public:
         bool isCollinear(const Vector2D& rhs) const noexcept;
     constexpr
         bool isOrtho(const Vector2D& rhs) const noexcept;
-
-private: // errors block
-    struct division_zero_error : public std::exception {
-        const char* what() const throw() {
-            return " ==> Error: Attempted to divide by Zero.\n";
-        }
-    };
-
-    struct out_of_struct_range : public std::exception {
-        const char* what() const throw() {
-            return " ==> Error: Out of struct range.\n";
-        }
-    };
 
 private:
     NumT m_x{};
@@ -164,8 +166,8 @@ std::ostream& operator<<(std::ostream& out, const Vector2D<NumT>& val) {
 template <class NumT>
 constexpr
     Vector2D<NumT>::Vector2D(const Vector2D& vec) noexcept
-    : m_x(vec.m_x)
-    , m_y(vec.m_y) {}
+    : m_x(std::move(vec.m_x))
+    , m_y(std::move(vec.m_y)) {}
 
 template <class NumT>
 constexpr
@@ -253,8 +255,8 @@ constexpr
 template <class NumT>
 constexpr
     Vector2D<NumT>& Vector2D<NumT>::operator/=(NumT p_val) {
-    if (std::abs(p_val) < precision_rate)
-        throw Vector2D::division_zero_error();
+    if (std::abs(p_val) < PRECISION_RATE)
+        throw std::overflow_error(" ==> Error: Attempted to divide by Zero.\n");
     this->m_x /= p_val;
     this->m_y /= p_val;
     return *this;
@@ -263,9 +265,10 @@ constexpr
 template <class NumT>
 constexpr
     bool Vector2D<NumT>::operator==(const Vector2D& rhs) const {
-    constexpr decltype(rhs.x()) diff_x(std::abs(this->m_x - rhs.m_x));
-    constexpr decltype(rhs.y()) diff_y(std::abs(this->m_y - rhs.m_y));
-    return (diff_x < precision_rate&& diff_y < precision_rate);
+    using type_x = decltype(rhs.x());
+    const type_x diff_x(std::abs(this->m_x - rhs.m_x));
+    const type_x diff_y(std::abs(this->m_y - rhs.m_y));
+    return (diff_x < PRECISION_RATE && diff_y < PRECISION_RATE);
 }
 
 template <class NumT>
@@ -278,25 +281,31 @@ constexpr
 /// Main API //
 template <class NumT>
 constexpr
-    float Vector2D<NumT>::magnitude() const noexcept {
-    return sqrt(static_cast<real32>(m_x * m_x + m_y * m_y));
+    real32 Vector2D<NumT>::magnitude_square() const noexcept {
+    return static_cast<real32>(m_x * m_x + m_y * m_y);
 }
 
 template <class NumT>
 constexpr
-    void Vector2D<NumT>::normalize_ip() {
+    real32 Vector2D<NumT>::magnitude() const noexcept {
+    return sqrt(this->magnitude_square());
+}
+
+template <class NumT>
+constexpr
+    Vector2D<NumT>& Vector2D<NumT>::normalize_ip() {
     auto l(this->magnitude());
     if (l > 0.f) {
         (*this) /= l;
     }
+    return *this;
 }
 
 template <class NumT>
 constexpr
-    Vector2D<NumT>& Vector2D<NumT>::normalize() const {
+    Vector2D<NumT> Vector2D<NumT>::normalize() const {
     auto ret(*this);
-    ret.normalize_ip();
-    return ret;
+    return ret.normalize_ip();
 }
 
 //template <class NumT>
@@ -322,27 +331,34 @@ constexpr
 template <class NumT>
 constexpr
     Vector2D<NumT>& Vector2D<NumT>::rotate_ip(const Radian& p_angle) noexcept {
-    auto x_(static_cast<NumT>(std::cos(p_angle.get()) * this->m_x
-        + std::sin(p_angle.get()) * this->m_y));
-    auto y_(static_cast<NumT>(-std::sin(p_angle.get()) * this->m_x
-        + std::cos(p_angle.get()) * this->m_y));
+    const auto x_(static_cast<NumT>(std::cos(p_angle) * this->m_x
+        + std::sin(p_angle) * this->m_y));
+    const auto y_(static_cast<NumT>(-std::sin(p_angle) * this->m_x
+        + std::cos(p_angle) * this->m_y));
+    
     this->m_x = x_;
     this->m_y = y_;
+
     return *this;
 }
 
 template <class NumT>
 constexpr
     Radian Vector2D<NumT>::angle() const noexcept {
-    return Radian(std::atan2(this->m_x, this->m_y));
+    return Radian(std::atan2(this->m_y, this->m_x));
 }
 
 template <class NumT>
 constexpr
     Radian Vector2D<NumT>::angleBetween(const Vector2D& rhs) const noexcept {
-    Radian a_diff(this->angle() - rhs.angle());
-    Radian half(PI_HALF);
-    if (a_diff > half) a_diff -= half;
+    if (this->magnitude_square() < PRECISION_RATE 
+       || rhs.magnitude_square() < PRECISION_RATE) {
+        return static_cast<Radian>(0.f);
+    }
+
+    const auto lhs_angle(this->angle());
+    const auto rhs_angle(rhs.angle());
+    Radian a_diff( std::abs(lhs_angle - rhs_angle) );
     return a_diff;
 }
 
@@ -355,40 +371,36 @@ constexpr
 template <class NumT>
 constexpr
     real32 Vector2D<NumT>::cross(const Vector2D& rhs) const noexcept {
-    // maybe fix: no magnitudes
-    return (std::sin(this->angleBetween(rhs).get()));
+    // FIXME: no magnitudes
+    return (std::sin(this->angleBetween(rhs)));
 }
 
 template <class NumT>
 constexpr
     bool Vector2D<NumT>::isCollinear(const Vector2D& rhs) const noexcept {
     auto val(std::abs(this->cross(rhs)));
-    return (val < precision_rate);
+    return (val < PRECISION_RATE);
 }
 
 template <class NumT>
 constexpr
     bool Vector2D<NumT>::isOrtho(const Vector2D& rhs) const noexcept {
     auto val(std::abs(this->dot(rhs)));
-    return (val < precision_rate);
+    return (val < PRECISION_RATE);
 }
 /// -------- ///
-
-/// SPECIFIC CONVERTATIONS ///
-//template <class NumT>
-//template <class To>
-//constexpr
-//    Vector2D<NumT>::operator Vector2D<To>() const {
-//    return Vector2D<To>(static_cast<To>(this->m_x),
-//        static_cast<To>(this->m_y));
-//}
-/// --------------------- ///
+template <class NumT>
+template <class NumU>
+constexpr Vector2D<NumT>::Vector2D(const Vector2D<NumU>& vector) {
+    this->m_x = static_cast<NumT>( std::move(vector.x()) );
+    this->m_y = static_cast<NumT>( std::move(vector.y()) );
+}
 
 /// TYPES ALIASES ///
 using Vector2i = Vector2D<sint32>;
-using Vector2u = Vector2D<uint32>;
+using Vector2u = NotImplementedException;
 using Vector2f = Vector2D<real32>;
 /// ------------- ///
 
 
-#endif // !__VECTROR_2D__
+#endif // !__VECTOR_2D__
