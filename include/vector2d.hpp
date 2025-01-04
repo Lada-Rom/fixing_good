@@ -371,7 +371,6 @@ constexpr
 template <class NumT>
 constexpr
     real32 Vector2D<NumT>::cross(const Vector2D& rhs) const noexcept {
-    // FIXME: no magnitudes
     return (std::sin(this->angleBetween(rhs)));
 }
 
