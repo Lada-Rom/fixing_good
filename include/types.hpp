@@ -42,7 +42,7 @@ using Radian = real32;
 using Degree = real32;
 
 
-constexpr real32 PRECISION_RATE = 1e-6;
+constexpr real32 PRECISION_RATE = 1e-6f;
 constexpr real32 PI = 3.14159265358979323846;
 constexpr real32 PI_HALF = PI / 2.f;
 

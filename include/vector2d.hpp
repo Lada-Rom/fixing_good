@@ -295,7 +295,7 @@ template <class NumT>
 constexpr
     Vector2D<NumT>& Vector2D<NumT>::normalize_ip() {
     auto l(this->magnitude());
-    if (l > 0.f) {
+    if (l > PRECISION_RATE) {  /* Do not compare with just 0.f */
         (*this) /= l;
     }
     return *this;

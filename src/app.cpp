@@ -16,14 +16,17 @@
 #include "types.hpp"
 
 
+constexpr real32 TARGET_FPS = 60.0f;
+constexpr real32 TARGET_DELAY = 1.0f / TARGET_FPS;
+
 SDL_AppResult SDL_AppInit(SDL_Window **window, SDL_Renderer **renderer) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-        SDL_Log("Couldn't initialize SDL: %s", SDL_GetError());
+        SDL_Log("Couldn't initialize SDL: %s\n", SDL_GetError());
         return SDL_APP_FAILURE;
     }
 
     if (!SDL_CreateWindowAndRenderer("Magic I(v)an", 800, 600, 0, window, renderer)) {
-        SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
+        SDL_Log("Couldn't create window/renderer: %s\n", SDL_GetError());
         return SDL_APP_FAILURE;
     }
 
@@ -32,6 +35,7 @@ SDL_AppResult SDL_AppInit(SDL_Window **window, SDL_Renderer **renderer) {
 
 
 SDL_AppResult SDL_AppEvent(SDL_Event *event) {
+
     if(event) {
         switch (event->type) {
         case SDL_EVENT_QUIT:
@@ -54,8 +58,8 @@ SDL_AppResult SDL_AppEvent(SDL_Event *event) {
 }
 
 
-SDL_AppResult SDL_IteratePhysics(Player& player, const Vector2f& delta_move) {
-    player.Move(delta_move);
+SDL_AppResult SDL_IteratePhysics(Player& player, const Vector2f& delta_move, const real32 timeDelta) {
+    player.Move(delta_move * timeDelta);
     return SDL_APP_CONTINUE;
 }
 
@@ -72,13 +76,25 @@ SDL_AppResult SDL_IterateRenderer(SDL_Renderer* renderer, Player& player) {
 
 
 SDL_AppResult SDL_AppIterate(SDL_Renderer *renderer, Player& player, const Vector2f& delta_move) {
-    const double now = ((double)SDL_GetTicks()) / 1000.0;  /* convert from milliseconds to seconds. */
-    SDL_IteratePhysics(player, delta_move);
+    static real32 last = 0.f;
+    // Also SDL3 has `SDL_GetTicksNs` - nanoseconds
+    const real32 start = static_cast<real32>(SDL_GetTicks()) * 1e-3f; /* convert from milliseconds to seconds. */
+    const real32 time_delta = start - last;
+
+    SDL_IteratePhysics(player, delta_move, time_delta);
     SDL_IterateRenderer(renderer, player);
+
+    last = static_cast<real32>(SDL_GetTicks()) * 1e-3;
+
+    if (time_delta < TARGET_DELAY) { /* TARGET_DEALY in seconds */
+        const real32 delayTime(TARGET_DELAY - time_delta);
+        SDL_Log("Now %f, Delta %f, TDelay %f, Last %f", start, time_delta, TARGET_DELAY, last);
+        SDL_Delay( static_cast<uint32>(delayTime * 1e3f) );
+    }
+
     return SDL_APP_CONTINUE;
 }
 
-#include "rect.hpp"
 int main(int /*argc*/, char** /*argv*/) {
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
@@ -104,20 +120,16 @@ int main(int /*argc*/, char** /*argv*/) {
 
         const bool *state = SDL_GetKeyboardState(nullptr);
         if (state[SDL_SCANCODE_W]) {
-            std::cout << "Dir W " << std::endl;
-            delta_move.setY(-1);
+            delta_move.setY(-1.f);
         }
         if (state[SDL_SCANCODE_A]) {
-            std::cout << "Dir A " << std::endl;
-            delta_move.setX(-1);
+            delta_move.setX(-1.f);
         }
         if (state[SDL_SCANCODE_S]) {
-            std::cout << "Dir S " << std::endl;
-            delta_move.setY(1);
+            delta_move.setY(1.f);
         }
         if (state[SDL_SCANCODE_D]) {
-            std::cout << "Dir D " << std::endl;
-            delta_move.setX(1);
+            delta_move.setX(1.f);
         }
 
         SDL_AppResult result = SDL_AppIterate(renderer, player, delta_move);
