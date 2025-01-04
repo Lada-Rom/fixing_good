@@ -136,7 +136,7 @@ public: // main API
     constexpr
         Vector2D normalize() const;
     constexpr
-        Vector2D<NumT>& normalize_ip();
+        Vector2D& normalize_ip();
 
     constexpr
         real32 dot(const Vector2D& rhs) const noexcept;
@@ -305,7 +305,8 @@ template <class NumT>
 constexpr
     Vector2D<NumT> Vector2D<NumT>::normalize() const {
     auto ret(*this);
-    return ret.normalize_ip();
+    ret.normalize_ip();
+    return ret;
 }
 
 //template <class NumT>
