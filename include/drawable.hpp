@@ -1,3 +1,13 @@
+/**
+ * @file drawable.hpp
+ * @author ArtemK
+ * @brief Class-behaviour for drawable objects
+ * @version 0.1
+ * @date 2025-01-04
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #ifndef MAGIC_DRAWABLE_HPP
 #define MAGIC_DRAWABLE_HPP
 

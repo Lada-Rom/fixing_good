@@ -1,3 +1,13 @@
+/**
+ * @file app.cpp
+ * @author Lada-Rom, ArtemK
+ * @brief Main point of game
+ * @version 0.0.1
+ * @date 2025-01-04
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #include <iostream>
 #include <SDL3/SDL.h>
 

@@ -1,3 +1,15 @@
+// FIXME: 
+// For what do we need this class ???
+/**
+ * @file actor.hpp
+ * @author ArtemK
+ * @brief Base class for all objects in the scene
+ * @version 0.1
+ * @date 2025-01-04
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #ifndef MAGIC_ACTOR_HPP
 #define MAGIC_ACTOR_HPP
 

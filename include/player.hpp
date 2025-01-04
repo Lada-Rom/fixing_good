@@ -1,3 +1,13 @@
+/**
+ * @file player.hpp
+ * @author Lada-Rom, ArtemK
+ * @brief Class of main character (playable)
+ * @version 0.1
+ * @date 2025-01-04
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #ifndef MAGIC_PLAYER_HPP
 #define MAGIC_PLAYER_HPP
 

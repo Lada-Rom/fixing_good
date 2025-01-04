@@ -1,4 +1,14 @@
-#ifndef __UTILS_CUSTOM__
+
+/**
+ * @file utils.hpp
+ * @author ArtemK
+ * @brief Some utils functions
+ * @version 1.0
+ * @date 2025-01-04
+ * 
+ * @copyright Copyright (c) 2025
+ * 
+ */
 #define __UTILS_CUSTOM__
 
 #include "types.hpp"
