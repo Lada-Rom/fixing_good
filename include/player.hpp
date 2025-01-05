@@ -13,7 +13,7 @@
 
 #include <SDL3/SDL.h>
 
-#include "types.hpp"
+#include "common/types.hpp"
 
 #include "actor.hpp"
 #include "moveable.hpp"

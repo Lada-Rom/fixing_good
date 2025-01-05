@@ -11,9 +11,9 @@
 #include <iostream>
 #include <SDL3/SDL.h>
 
-#include "vector2d.hpp"
+#include "geometry/vector2d.hpp"
 #include "player.hpp"
-#include "types.hpp"
+#include "common/types.hpp"
 
 
 constexpr real32 TARGET_FPS = 60.0f;

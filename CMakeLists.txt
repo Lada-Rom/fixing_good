@@ -14,7 +14,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY VALUE ${CMAKE_BINARY_DIR}/install)
 endif()
 
-
 add_executable(
     ${PROJECT_NAME}
     
@@ -27,14 +26,17 @@ add_executable(
     include/drawable.hpp
 	include/moveable.hpp
 	
-	include/vector2d.hpp
-    include/rect.hpp
+	include/geometry/vector2d.hpp
+    include/geometry/rect.hpp
     
-    include/types.hpp
-    include/utils.hpp
+    include/common/types.hpp
+    include/common/utils.hpp
 )
+# Set visible `include` dir for whole project
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # INCLUDE headers-only
+add_subdirectory(include ${CMAKE_CURRENT_SOURCE_DIR}/include EXCLUDE_FROM_ALL)
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # COPY resources (images, musics, etc) to destination
@@ -48,4 +50,3 @@ target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
 
 add_subdirectory(thirdparty/catch2 ${CMAKE_CURRENT_BINARY_DIR}/catch2 EXCLUDE_FROM_ALL)
 add_subdirectory(tests)
-# target_link_libraries(tests PRIVATE Catch2::Catch2)

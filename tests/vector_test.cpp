@@ -1,6 +1,6 @@
 #include <memory>
 #include <catch2/catch_test_macros.hpp>
-#include "../include/vector2d.hpp"
+#include "geometry/vector2d.hpp"
 
 TEST_CASE("vectors can be created for several types", "[vector2d]" ) {
     Vector2f fvec;

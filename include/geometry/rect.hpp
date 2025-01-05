@@ -16,7 +16,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "types.hpp"
+#include "common/types.hpp"
 #include "vector2d.hpp"
 
 /**
@@ -77,7 +77,7 @@ public:
         void setHeight(NumT p_height) noexcept { m_height = std::move(p_height); }
 
     constexpr
-        void setLT(NumT p_x, NumT p_y) noexcept { 
+        void setLeftTop(NumT p_x, NumT p_y) noexcept { 
             setX(p_x);
             setY(p_y);
         }
@@ -89,13 +89,13 @@ public:
 
 public:
     constexpr
-        Vector2D<NumT> lt() const noexcept { return Vector2D<NumT>(m_x, m_y); }
+        Vector2D<NumT> leftTop() const noexcept { return Vector2D<NumT>(m_x, m_y); }
     constexpr
         Vector2D<NumT> size() const noexcept { return Vector2D<NumT>(m_width, m_height); }
     
     constexpr
-        void setLT(const Vector2D<NumT>& lt_pos) {
-            setLT(lt_pos.x(), lt_pos.y());
+        void setLeftTop(const Vector2D<NumT>& lt_pos) {
+            setLeftTop(lt_pos.x(), lt_pos.y());
         }
     constexpr
         void setSize(const Vector2D<NumT>& size) {
@@ -157,11 +157,12 @@ constexpr
 template <class NumT>
 constexpr 
     bool Rect<NumT>::operator==(const Rect<NumT>& rhs) const {
-    const decltype(rhs.x()) diff_x(std::abs(this->m_x - rhs.m_x));
-    const decltype(rhs.y()) diff_y(std::abs(this->m_y - rhs.m_y));
+    using type_x = decltype(rhs.x());
+    const type_x diff_x(std::abs(this->m_x - rhs.m_x));
+    const type_x diff_y(std::abs(this->m_y - rhs.m_y));
 
-    const decltype(rhs.width())  diff_w(std::abs(this->m_width  - rhs.m_width));
-    const decltype(rhs.height()) diff_h(std::abs(this->m_height - rhs.m_height));
+    const type_x diff_w(std::abs(this->m_width  - rhs.m_width));
+    const type_x diff_h(std::abs(this->m_height - rhs.m_height));
 
     return (diff_x < PRECISION_RATE && diff_y < PRECISION_RATE 
          && diff_w < PRECISION_RATE && diff_h < PRECISION_RATE);

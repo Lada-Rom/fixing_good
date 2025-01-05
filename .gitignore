@@ -3,3 +3,4 @@ build*
 bin.*
 CMakeFiles*
 .vscode*
+*.cmake

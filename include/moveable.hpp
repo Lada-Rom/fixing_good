@@ -11,7 +11,7 @@
 #ifndef MAGIC_MOVEABLE_HPP
 #define MAGIC_MOVEABLE_HPP
 
-#include "types.hpp"
+#include "common/types.hpp"
 
 class Moveable {
 public:
