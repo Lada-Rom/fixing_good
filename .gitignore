@@ -4,3 +4,5 @@ bin.*
 CMakeFiles*
 .vscode*
 *.cmake
+*.lib
+*.dll
