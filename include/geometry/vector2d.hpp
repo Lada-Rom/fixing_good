@@ -33,7 +33,7 @@ public:
         : m_x(std::move(x))
         , m_y(std::move(y)) {}
     constexpr
-        Vector2D(const Vector2D& vec) noexcept;        
+        Vector2D(const Vector2D& vec) noexcept;
     constexpr
         Vector2D& operator=(const Vector2D& vec) noexcept;
     // https://habr.com/ru/articles/164221/
@@ -403,4 +403,4 @@ using Vector2f = Vector2D<real32>;
 /// ------------- ///
 
 
-#endif // !__VECTOR_2D__
+#endif  // !__VECTOR_2D__

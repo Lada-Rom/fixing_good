@@ -14,6 +14,7 @@
 #include <SDL3/SDL.h>
 
 #include "common/types.hpp"
+#include "geometry/vector2d.hpp"
 
 #include "actor.hpp"
 #include "moveable.hpp"

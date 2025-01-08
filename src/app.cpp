@@ -11,12 +11,14 @@
 #include <iostream>
 #include <SDL3/SDL.h>
 
-#include "geometry/vector2d.hpp"
 #include "player.hpp"
 #include "common/types.hpp"
+#include "geometry/vector2d.hpp"
+#include "timer.hpp"
 
 
-constexpr real32 TARGET_FPS = 60.0f;
+
+constexpr real32 TARGET_FPS = 90.0f;
 constexpr real32 TARGET_DELAY = 1.0f / TARGET_FPS;
 
 SDL_AppResult SDL_AppInit(SDL_Window **window, SDL_Renderer **renderer) {
@@ -77,6 +79,9 @@ SDL_AppResult SDL_IterateRenderer(SDL_Renderer* renderer, Player& player) {
 
 SDL_AppResult SDL_AppIterate(SDL_Renderer *renderer, Player& player, const Vector2f& delta_move) {
     static real32 last = 0.f;
+    static Timer timer;
+    timer.start();
+    
     // Also SDL3 has `SDL_GetTicksNs` - nanoseconds
     const real32 start = static_cast<real32>(SDL_GetTicks()) * 1e-3f; /* convert from milliseconds to seconds. */
     const real32 time_delta = start - last;
@@ -86,14 +91,16 @@ SDL_AppResult SDL_AppIterate(SDL_Renderer *renderer, Player& player, const Vecto
 
     last = static_cast<real32>(SDL_GetTicks()) * 1e-3;
 
-    if (time_delta < TARGET_DELAY) { /* TARGET_DEALY in seconds */
+    if (time_delta < TARGET_DELAY + PRECISION_RATE) { /* TARGET_DEALY in seconds */
         const real32 delayTime(TARGET_DELAY - time_delta);
         SDL_Log("Now %f, Delta %f, TDelay %f, Last %f", start, time_delta, TARGET_DELAY, last);
         SDL_Delay( static_cast<uint32>(delayTime * 1e3f) );
     }
-
+    auto value = timer.getElapsedTime() * 1e-9f;
+    SDL_Log("TimeElapsed %f", value);
     return SDL_APP_CONTINUE;
 }
+
 
 int main(int /*argc*/, char** /*argv*/) {
     SDL_Window *window = nullptr;
@@ -104,7 +111,7 @@ int main(int /*argc*/, char** /*argv*/) {
     if (result == SDL_APP_FAILURE) {
         return EXIT_FAILURE;
     }
-    SDL_SetRenderVSync(renderer, 1);
+    // SDL_SetRenderVSync(renderer, 1);
 
     bool running = true;
     SDL_Event *event = new SDL_Event();

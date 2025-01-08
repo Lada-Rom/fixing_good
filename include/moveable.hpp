@@ -19,7 +19,7 @@ public:
     // Moveable() = default; 
     virtual ~Moveable() {}
 
-    virtual void Move(real32 delta_x, real32 delta_y) = 0;
+    virtual void Move(real32 delta_x = 0.f, real32 delta_y = 0.f) = 0;
 };
 
 #endif  // !MAGIC_MOVEABLE_HPP

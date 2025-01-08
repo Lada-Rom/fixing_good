@@ -22,6 +22,7 @@ add_executable(
 
     include/actor.hpp
     include/player.hpp
+    include/timer.hpp
 	
     include/drawable.hpp
 	include/moveable.hpp
@@ -34,10 +35,6 @@ add_executable(
 )
 # Set visible `include` dir for whole project
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-# INCLUDE headers-only
-add_subdirectory(include ${CMAKE_CURRENT_SOURCE_DIR}/include EXCLUDE_FROM_ALL)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # COPY resources (images, musics, etc) to destination
 set(RESOURCES_PATH ${CMAKE_CURRENT_SOURCE_DIR}/resources)

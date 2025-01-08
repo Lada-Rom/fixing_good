@@ -25,4 +25,4 @@ constexpr Degree rad2deg(const Radian& p_angle) {
 }
 
 
-#endif //!__UTILS_CUSTOM__
+#endif  // !__UTILS_CUSTOM__

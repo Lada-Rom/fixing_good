@@ -19,7 +19,7 @@ public:
         SDL_Log("Drawable object is deleted");
     }
 
-    virtual bool Draw(SDL_Renderer *renderer) = 0;
+    virtual bool Draw(SDL_Renderer *renderer = nullptr) = 0;
 };
 
 #endif  // !MAGIC_DRAWABLE_HPP
