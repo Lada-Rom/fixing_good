@@ -31,7 +31,7 @@ public:
 
     ~Timer() = default;
 
-    [[nodiscard]] constexpr 
+    [[nodiscard]] constexpr
     uint64 getElapsedTime() const {
         const uint64 carry = m_isPaused ? m_idleTickNs - m_startTickNs : SDL_GetTicksNS() - m_startTickNs;
         const uint64 retVal = m_offsetTickNs + m_totalTickNs + carry;
@@ -55,7 +55,7 @@ public:
     void stop();
 
     constexpr
-    void restart();
+    void reset();
 
     constexpr
     void pause();
@@ -90,6 +90,7 @@ void Timer::stop() {
         return;
 
     m_isRunning = false;
+    m_isPaused = false;
 
     m_startTickNs = 0;
     m_idleTickNs  = 0;
@@ -119,7 +120,7 @@ void Timer::unpause() {
 }
 
 constexpr
-void Timer::restart() {
+void Timer::reset() {
     if(!m_isRunning)  /* if timer ISN'T active => return. !(true) == false*/
         return;
 

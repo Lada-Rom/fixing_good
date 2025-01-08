@@ -35,8 +35,8 @@ public:
         SDL_Log("Player is deleted");
     }
 
-    void Move(const Vector2f& delta_move) {
-        Vector2f norm_delta_move { delta_move.normalize() };
+    void Move(const Vector2f& delta_move, const real32& timeDelta) {
+        Vector2f norm_delta_move { delta_move.normalize() * timeDelta };
 
         real32 norm_x{ norm_delta_move.x() * move_delta };
         real32 norm_y{ norm_delta_move.y() * move_delta };
@@ -54,7 +54,7 @@ public:
     }
 
 private:
-    const real32 move_delta{ 3 };
+    const real32 move_delta{ 0.3f };
     SDL_FRect rect{ 10.f, 10.f, 100.f, 100.f };
 
 };
