@@ -16,7 +16,7 @@
 class Moveable {
 public:
     // TODO: Do we really need an instance of Moveable class
-    // Moveable() = default; 
+    // Moveable() = default;
     virtual ~Moveable() {}
 
     virtual void Move(real32 delta_x = 0.f, real32 delta_y = 0.f) = 0;

@@ -17,22 +17,27 @@ endif()
 add_executable(
     ${PROJECT_NAME}
     
-    src/app.cpp
+    src/main.cpp
     #src/mistral_game.cpp
+
+    include/app.hpp
+    include/settings.hpp
 
     include/actor.hpp
     include/player.hpp
     include/timer.hpp
-	
+    include/fps.hpp
+
     include/drawable.hpp
-	include/moveable.hpp
-	
-	include/geometry/vector2d.hpp
+    include/moveable.hpp
+
+    include/geometry/vector2d.hpp
     include/geometry/rect.hpp
     
     include/common/types.hpp
     include/common/utils.hpp
 )
+
 # Set visible `include` dir for whole project
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
