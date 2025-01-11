@@ -24,7 +24,7 @@ public:
     , m_isRunning(false)
     , m_isPaused(false) {}
     constexpr Timer(Timer&&) = default;
-    
+
     Timer& operator=(const Timer&) = delete;
     Timer(const Timer&) = delete;
     Timer& operator=(Timer&&) = delete;
@@ -32,21 +32,13 @@ public:
     ~Timer() = default;
 
     [[nodiscard]] constexpr
-    uint64 getElapsedTime() const {
-        const uint64 carry = m_isPaused ? m_idleTickNs - m_startTickNs : SDL_GetTicksNS() - m_startTickNs;
-        const uint64 retVal = m_offsetTickNs + m_totalTickNs + carry;
-        return retVal;
-    }
+    uint64 getElapsedTime() const;
 
     [[nodiscard]] constexpr
-    bool isRunning() const {
-        return m_isRunning;
-    }
+    bool isRunning() const;
 
     [[nodiscard]] constexpr
-    bool isPaused() const {
-        return m_isPaused;
-    }
+    bool isPaused() const;
 
     constexpr
     void start();
@@ -63,7 +55,6 @@ public:
     constexpr
     void unpause();
 
-
 private:
     const uint64 m_offsetTickNs{0};
 
@@ -75,9 +66,26 @@ private:
     bool m_isPaused {false};
 };
 
+[[nodiscard]] constexpr
+uint64 Timer::getElapsedTime() const {
+    const uint64 carry = m_isPaused ? m_idleTickNs - m_startTickNs : SDL_GetTicksNS() - m_startTickNs;
+    const uint64 retVal = m_offsetTickNs + m_totalTickNs + carry;
+    return retVal;
+}
+
+[[nodiscard]] constexpr
+bool Timer::isRunning() const {
+    return m_isRunning;
+}
+
+[[nodiscard]] constexpr
+bool Timer::isPaused() const {
+    return m_isPaused;
+}
+
 constexpr
 void Timer::start() {
-    if(m_isRunning || m_isPaused)  /* if timer is active or paused => return */
+    if (m_isRunning || m_isPaused)  /* if timer is active or paused => return */
         return;
 
     m_isRunning = true;
@@ -86,20 +94,20 @@ void Timer::start() {
 
 constexpr
 void Timer::stop() {
-    if(!m_isRunning)  /* if timer isn't active => return. !(true) == false*/
+    if (!m_isRunning)  /* if timer isn't active => return. !(true) == false*/
         return;
 
     m_isRunning = false;
     m_isPaused = false;
 
     m_startTickNs = 0;
-    m_idleTickNs  = 0;
+    m_idleTickNs = 0;
     m_totalTickNs = 0;
 }
 
 constexpr
 void Timer::pause() {
-    if(!m_isRunning || m_isPaused)  /* if timer ISN'T active or IS paused => return. !(true) == false*/
+    if (!m_isRunning || m_isPaused)  /* if timer ISN'T active or IS paused => return. !(true) == false*/
         return;
 
     m_isPaused = true;
@@ -109,7 +117,7 @@ void Timer::pause() {
 
 constexpr
 void Timer::unpause() {
-    if(!m_isRunning || !m_isPaused)  /* if timer ISN'T active or ISN'T paused => return. !(true) == false*/
+    if (!m_isRunning || !m_isPaused)  /* if timer ISN'T active or ISN'T paused => return. !(true) == false*/
         return;
 
     m_isPaused = false;
@@ -121,15 +129,14 @@ void Timer::unpause() {
 
 constexpr
 void Timer::reset() {
-    if(!m_isRunning)  /* if timer ISN'T active => return. !(true) == false*/
+    if (!m_isRunning)  /* if timer ISN'T active => return. !(true) == false*/
         return;
 
     m_isPaused = false;
 
     m_startTickNs = 0;
-    m_idleTickNs  = 0;
+    m_idleTickNs = 0;
     m_totalTickNs = 0;
 }
-
 
 #endif  // !__CUSTOM_TIMER__

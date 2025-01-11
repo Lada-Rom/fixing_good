@@ -20,6 +20,9 @@ add_executable(
     src/main.cpp
     #src/mistral_game.cpp
 
+    src/app.cpp
+    src/fps.cpp
+
     include/app.hpp
     include/settings.hpp
 
