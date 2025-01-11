@@ -6,3 +6,7 @@
 	path = thirdparty/catch2
 	url = https://github.com/catchorg/Catch2.git
 	ignore = dirty
+[submodule "thirdparty/SDL_image"]
+	path = thirdparty/SDL_image
+	url = https://github.com/libsdl-org/SDL_image.git
+	ignore = dirty

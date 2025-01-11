@@ -50,5 +50,9 @@ file(COPY ${RESOURCES_PATH} DESTINATION ${CMAKE_BINARY_DIR})
 add_subdirectory(thirdparty/SDL ${CMAKE_CURRENT_BINARY_DIR}/SDL EXCLUDE_FROM_ALL)
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
 
+# ADD dependencies
+add_subdirectory(thirdparty/SDL_image ${CMAKE_CURRENT_BINARY_DIR}/SDL_image EXCLUDE_FROM_ALL)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_image::SDL3_image)
+
 add_subdirectory(thirdparty/catch2 ${CMAKE_CURRENT_BINARY_DIR}/catch2 EXCLUDE_FROM_ALL)
 add_subdirectory(tests)
